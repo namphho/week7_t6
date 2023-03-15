@@ -11,7 +11,7 @@
         android:name=".app.MyApp"
         android:theme="@style/Theme.Week7_t6">
         <activity
-            android:name=".MainActivity"
+            android:name=".screens.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

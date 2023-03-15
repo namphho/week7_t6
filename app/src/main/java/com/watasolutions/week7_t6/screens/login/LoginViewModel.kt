@@ -1,29 +1,38 @@
 package com.watasolutions.week7_t6.screens.login
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.watasolutions.week7_t6.MySharedPreferences
-import com.watasolutions.week7_t6.models.User
+import com.watasolutions.week7_t6.app.Event
 
 class LoginViewModel(val prefs: MySharedPreferences) : ViewModel() {
-    private var _saveSuccessEvent: MutableLiveData<Boolean> = MutableLiveData()
-    val saveSuccessEvent: LiveData<Boolean>
-        get() = _saveSuccessEvent
+    private var _loginSuccessEvent: MutableLiveData<Event<Boolean>> =
+        MutableLiveData<Event<Boolean>>()
+    val saveSuccessEvent: LiveData<Event<Boolean>>
+        get() = _loginSuccessEvent
 
-    private var _loadSuccessEvent: MutableLiveData<User> = MutableLiveData()
-    val loadSuccessEvent: LiveData<User>
-        get() = _loadSuccessEvent
+    private var _loginFailedEvent: MutableLiveData<String> = MutableLiveData()
+    val loginFailedEvent: LiveData<String>
+        get() = _loginFailedEvent
 
-    fun saveUser(user: String, password: String) {
-        prefs.saveUsername(user)
-        prefs.savePassword(password)
-        _saveSuccessEvent.value = true
+
+    fun login(user: String, password: String) {
+        val storedUsername = prefs.getUsername()
+        val storePassword = prefs.getPassword()
+        if (storedUsername != user || storedUsername.isEmpty()) {
+            _loginSuccessEvent.value = Event(false)
+            _loginFailedEvent.value = "Tên đăng nhập không hợp lệ"
+            return;
+        }
+        if (storePassword != password || storedUsername.isEmpty()) {
+            _loginSuccessEvent.value = Event(false)
+            _loginFailedEvent.value = "Mật khẩu không hợp lệ"
+            return;
+        }
+        Log.e("success", "login success")
+        _loginSuccessEvent.value = Event(true)
     }
 
-    fun loadUser(){
-        val username = prefs.getUsername()
-        val pass = prefs.getPassword()
-        _loadSuccessEvent.postValue(User(username ?: "", pass ?: ""))
-    }
 }

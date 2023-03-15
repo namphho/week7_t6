@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.watasolutions.week7_t6.R
 import com.watasolutions.week7_t6.app.MyApp
 import com.watasolutions.week7_t6.app.ViewModelFactory
 import com.watasolutions.week7_t6.databinding.FragmentLoginBinding
@@ -18,10 +21,13 @@ import com.watasolutions.week7_t6.databinding.FragmentLoginBinding
  */
 class LoginFragment : Fragment() {
     lateinit var binding: FragmentLoginBinding
-    lateinit var model: LoginViewModel
+    lateinit var viewModel: LoginViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        model = ViewModelProvider(this, ViewModelFactory(activity?.application as MyApp)).get(
+        viewModel = ViewModelProvider(
+            this,
+            ViewModelFactory(activity?.application as MyApp)
+        ).get(
             LoginViewModel::class.java
         )
     }
@@ -37,33 +43,35 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        registerLoadUserEvent()
-        registerSaveSuccess()
-        binding.btnSave.setOnClickListener {
+        registerErrorEvent()
+        registerLoginSuccess()
+        binding.btnLogin.setOnClickListener {
             val username = binding.tvUsername.editText?.text.toString().trim()
             val password = binding.tvPassword.editText?.text.toString().trim()
-            model.saveUser(username, password)
+            viewModel.login(username, password)
         }
-        binding.btnLoad.setOnClickListener {
-            model.loadUser()
+        binding.btnSignUp.setOnClickListener {
+            val controller = findNavController()
+            controller.navigate(R.id.action_loginFragment_to_signUpFragment)
         }
 
     }
 
-    private fun registerSaveSuccess(){
-        model.saveSuccessEvent.observe(this){
-            when(it) {
-                true -> {
-                    binding.tvUsername.editText?.setText("")
-                    binding.tvPassword.editText?.setText("")
+    private fun registerLoginSuccess() {
+        viewModel.saveSuccessEvent.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { isSuccess ->
+                if (isSuccess) {
+                    findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
                 }
             }
         }
     }
 
-    private fun registerLoadUserEvent(){
-        model.loadSuccessEvent.observe(this){
-            binding.tvReview.text = "${it.username} - ${it.password}"
+    private fun registerErrorEvent() {
+        viewModel.loginFailedEvent.observe(viewLifecycleOwner) { errMsg ->
+            if (viewModel.saveSuccessEvent.value?.peekContent() == false) {
+                Toast.makeText(activity, errMsg, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
