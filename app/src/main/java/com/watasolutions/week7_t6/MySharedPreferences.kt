@@ -17,22 +17,27 @@ class MySharedPreferences {
     }
 
     fun init(context: Context) {
-        sharedPreferences = context.getSharedPreferences(Companion.PREF_NAME, Context.MODE_PRIVATE)
+        sharedPreferences = context.getSharedPreferences(
+            Companion.PREF_NAME,
+            Context.MODE_PRIVATE
+        )
     }
 
     fun saveUsername(username: String) {
-        sharedPreferences.edit().putString(KEY.KEY_USERNAME.value, username).apply()
+        sharedPreferences.edit().putString(KEY.KEY_USERNAME.value, username)
+            .apply()
     }
 
     fun getUsername(): String? {
         return sharedPreferences.getString(KEY.KEY_USERNAME.value, "")
     }
 
-    fun savePassword(password: String){
-        sharedPreferences.edit().putString(KEY.KEY_PASSWORD.value, password).apply()
+    fun savePassword(password: String) {
+        sharedPreferences.edit().putString(KEY.KEY_PASSWORD.value, password)
+            .apply()
     }
 
-    fun getPassword() : String? {
+    fun getPassword(): String? {
         return sharedPreferences.getString(KEY.KEY_PASSWORD.value, "")
     }
 

@@ -21,12 +21,12 @@ class LoginViewModel(val prefs: MySharedPreferences) : ViewModel() {
     fun login(user: String, password: String) {
         val storedUsername = prefs.getUsername()
         val storePassword = prefs.getPassword()
-        if (storedUsername != user || storedUsername.isEmpty()) {
+        if ( user.isEmpty() ||storedUsername != user ) {
             _loginSuccessEvent.value = Event(false)
             _loginFailedEvent.value = "Tên đăng nhập không hợp lệ"
             return;
         }
-        if (storePassword != password || storedUsername.isEmpty()) {
+        if (password.isEmpty() || storePassword != password) {
             _loginSuccessEvent.value = Event(false)
             _loginFailedEvent.value = "Mật khẩu không hợp lệ"
             return;

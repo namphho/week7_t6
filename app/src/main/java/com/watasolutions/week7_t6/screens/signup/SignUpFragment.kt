@@ -19,7 +19,7 @@ class SignUpFragment : Fragment() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory(activity?.application as MyApp)
+            ViewModelFactory((activity?.application as MyApp).prefs)
         ).get(
             SignUpViewModel::class.java
         )

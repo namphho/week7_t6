@@ -26,7 +26,14 @@ class LoginFragment : Fragment() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory(activity?.application as MyApp)
+            ViewModelFactory((activity?.application as MyApp).prefs)
+        ).get(
+            LoginViewModel::class.java
+        )
+
+//        /// old style
+        viewModel = ViewModelProvider(
+            this,
         ).get(
             LoginViewModel::class.java
         )
