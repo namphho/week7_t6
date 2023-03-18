@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.watasolutions.week7_t6.MySharedPreferences
 
-class SignUpViewModel(val prefs: MySharedPreferences, val data: String) :
+class SignUpViewModel(val prefs: MySharedPreferences) :
     ViewModel() {
     private var _registerSuccessEvent: MutableLiveData<Boolean> = MutableLiveData()
     val registerSuccessEvent: LiveData<Boolean>
