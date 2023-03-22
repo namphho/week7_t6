@@ -15,11 +15,15 @@ import com.watasolutions.week7_t6.databinding.FragmentSignUpBinding
 class SignUpFragment : Fragment() {
     lateinit var binding: FragmentSignUpBinding
     lateinit var viewModel: SignUpViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory((activity?.application as MyApp).prefs)
+            ViewModelFactory(
+                (activity?.application as MyApp).prefs,
+                (activity?.application as MyApp).db
+            )
         ).get(
             SignUpViewModel::class.java
         )
@@ -39,7 +43,7 @@ class SignUpFragment : Fragment() {
         binding.btnRegister.setOnClickListener {
             val username = binding.tvUsername.editText?.text.toString().trim()
             val password = binding.tvPassword.editText?.text.toString().trim()
-            viewModel.registerUser(username, password)
+            viewModel.registerUserWithDB(username, password)
         }
 
         viewModel.registerSuccessEvent.observe(viewLifecycleOwner) { isSuccess ->

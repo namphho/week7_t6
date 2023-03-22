@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.watasolutions.week7_t6.R
 import com.watasolutions.week7_t6.app.MyApp
 import com.watasolutions.week7_t6.app.ViewModelFactory
+import com.watasolutions.week7_t6.data.db.AccountDatabase
 import com.watasolutions.week7_t6.databinding.FragmentLoginBinding
 
 
@@ -26,7 +27,8 @@ class LoginFragment : Fragment() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory((activity?.application as MyApp).prefs)
+            ViewModelFactory((activity?.application as MyApp).prefs,
+                AccountDatabase.getDatabase(activity?.application as MyApp))
         ).get(
             LoginViewModel::class.java
         )
@@ -55,7 +57,7 @@ class LoginFragment : Fragment() {
         binding.btnLogin.setOnClickListener {
             val username = binding.tvUsername.editText?.text.toString().trim()
             val password = binding.tvPassword.editText?.text.toString().trim()
-            viewModel.login(username, password)
+            viewModel.loginWithDatabase(username, password)
         }
         binding.btnSignUp.setOnClickListener {
             val controller = findNavController()
