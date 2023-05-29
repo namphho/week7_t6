@@ -53,7 +53,15 @@ class SignUpFragment : Fragment() {
                         .LENGTH_SHORT
                 ).show()
             }
+        }
 
+        viewModel.registerErrorEvent.observe(viewLifecycleOwner) { isFailed ->
+            if (isFailed) {
+                Toast.makeText(
+                    activity, "Đăng ký that bai", Toast
+                        .LENGTH_SHORT
+                ).show()
+            }
         }
     }
 

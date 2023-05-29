@@ -16,6 +16,11 @@ class SignUpViewModel(val prefs: MySharedPreferences, val db: AccountDatabase) :
     val registerSuccessEvent: LiveData<Boolean>
         get() = _registerSuccessEvent
 
+    private var _registerErrorEvent: MutableLiveData<Boolean> =
+        MutableLiveData()
+    val registerErrorEvent: LiveData<Boolean>
+        get() = _registerErrorEvent
+
 
     fun registerUser(username: String, pass: String) {
         prefs.saveUsername(username);
@@ -25,9 +30,15 @@ class SignUpViewModel(val prefs: MySharedPreferences, val db: AccountDatabase) :
 
     fun registerUserWithDB(username: String, pass: String) {
         viewModelScope.launch {
-            db.accountDao()
-                .insert(Account(username = username, password = pass))
-            _registerSuccessEvent.value = true;
+            val account = db.accountDao().checkUsernameExisting(username)
+            if (account == null) {
+                db.accountDao()
+                    .insert(Account(username = username, password = pass))
+                _registerSuccessEvent.value = true;
+            } else {
+                _registerErrorEvent.value = true
+            }
+
         }
     }
 

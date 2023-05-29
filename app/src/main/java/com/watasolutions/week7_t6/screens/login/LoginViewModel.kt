@@ -52,7 +52,7 @@ class LoginViewModel(val prefs: MySharedPreferences, val db: AccountDatabase) :
         }
         Log.e("success", "login success")
         viewModelScope.launch {
-            val account = db.accountDao().searchAccount(username = user,
+            val account = db.accountDao().searchAccount(user = user,
                 pass = password)
             if (account != null) {
                 _loginSuccessEvent.value = Event(true)

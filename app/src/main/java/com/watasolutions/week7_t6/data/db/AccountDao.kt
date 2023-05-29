@@ -10,11 +10,12 @@ interface AccountDao {
     @Query("SELECT * FROM account ORDER BY username ASC")
     suspend fun getAccounts(): List<Account>
 
-    @Query(
-        "SELECT * FROM account WHERE username = :username AND password = " +
-                ":pass"
-    )
-    suspend fun searchAccount(username: String, pass: String): Account?
+    @Query("SELECT * FROM account WHERE username = :user AND " +
+            "password = :pass")
+    suspend fun searchAccount(user: String, pass: String): Account?
+
+    @Query("SELECT * FROM account WHERE username = :user")
+    suspend fun checkUsernameExisting(user: String): Account?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(account: Account)
